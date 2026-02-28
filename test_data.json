@@ -1,0 +1,20 @@
+[
+  {"date":"2026-02-01","tasks_completed":6,"tasks_total":8,"deep_work_hours":4,"sleep_hours":7.5,"mood":7,"stress":4,"recovery":7},
+  {"date":"2026-02-02","tasks_completed":5,"tasks_total":7,"deep_work_hours":4.5,"sleep_hours":7,"mood":7,"stress":4,"recovery":6},
+  {"date":"2026-02-03","tasks_completed":6,"tasks_total":8,"deep_work_hours":5,"sleep_hours":7.5,"mood":8,"stress":3,"recovery":7},
+  {"date":"2026-02-04","tasks_completed":5,"tasks_total":6,"deep_work_hours":4,"sleep_hours":7,"mood":7,"stress":4,"recovery":6},
+  {"date":"2026-02-05","tasks_completed":6,"tasks_total":7,"deep_work_hours":4.5,"sleep_hours":7.5,"mood":7,"stress":3,"recovery":7},
+
+  {"date":"2026-02-06","tasks_completed":7,"tasks_total":8,"deep_work_hours":6,"sleep_hours":6.5,"mood":7,"stress":5,"recovery":5},
+  {"date":"2026-02-07","tasks_completed":8,"tasks_total":9,"deep_work_hours":6,"sleep_hours":6,"mood":6,"stress":6,"recovery":5},
+  {"date":"2026-02-08","tasks_completed":7,"tasks_total":8,"deep_work_hours":6,"sleep_hours":6,"mood":6,"stress":6,"recovery":4},
+  {"date":"2026-02-09","tasks_completed":8,"tasks_total":9,"deep_work_hours":6,"sleep_hours":5.5,"mood":6,"stress":7,"recovery":4},
+
+  {"date":"2026-02-10","tasks_completed":8,"tasks_total":9,"deep_work_hours":6,"sleep_hours":5,"mood":5,"stress":8,"recovery":3},
+  {"date":"2026-02-11","tasks_completed":7,"tasks_total":8,"deep_work_hours":5.5,"sleep_hours":5,"mood":5,"stress":8,"recovery":3},
+  {"date":"2026-02-12","tasks_completed":6,"tasks_total":7,"deep_work_hours":5,"sleep_hours":5.5,"mood":6,"stress":7,"recovery":4},
+
+  {"date":"2026-02-13","tasks_completed":5,"tasks_total":6,"deep_work_hours":3.5,"sleep_hours":7.5,"mood":7,"stress":4,"recovery":7},
+  {"date":"2026-02-14","tasks_completed":5,"tasks_total":6,"deep_work_hours":3,"sleep_hours":8,"mood":8,"stress":3,"recovery":8},
+  {"date":"2026-02-15","tasks_completed":6,"tasks_total":7,"deep_work_hours":4,"sleep_hours":7.5,"mood":8,"stress":3,"recovery":8}
+]
