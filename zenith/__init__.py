@@ -16,5 +16,5 @@ Architecture:
 
 from zenith.pipeline import analyze, generate_report
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __all__ = ["analyze", "generate_report"]

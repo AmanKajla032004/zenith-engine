@@ -112,6 +112,28 @@ class TrendThresholds:
 
 
 # ---------------------------------------------------------------------------
+# Trend confidence
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class TrendConfidenceParams:
+    """
+    Weights and caps for the composite trend confidence score [0, 1].
+
+    Confidence = w_r2 * R²  +  w_agreement * sign_agreement  -  w_volatility * vol_penalty
+
+    - R²: goodness-of-fit of the short-window OLS (how linear is the trend)
+    - sign_agreement: 1.0 if 7d and 30d slopes agree in sign, 0.0 otherwise
+    - vol_penalty: min(volatility / vol_normalizer, 1.0) — higher vol → lower confidence
+    """
+
+    weight_r2: float = 0.50
+    weight_agreement: float = 0.30
+    weight_volatility: float = 0.20
+    volatility_normalizer: float = 3.0   # volatility at which penalty saturates
+
+
+# ---------------------------------------------------------------------------
 # Detector thresholds
 # ---------------------------------------------------------------------------
 
@@ -205,6 +227,7 @@ class ZenithConfig:
     windows: WindowParams = field(default_factory=WindowParams)
     volatility: VolatilityWeights = field(default_factory=VolatilityWeights)
     trend: TrendThresholds = field(default_factory=TrendThresholds)
+    trend_confidence: TrendConfidenceParams = field(default_factory=TrendConfidenceParams)
     burnout: BurnoutThresholds = field(default_factory=BurnoutThresholds)
     compensation: CompensationThresholds = field(default_factory=CompensationThresholds)
     early_warning: EarlyWarningThresholds = field(default_factory=EarlyWarningThresholds)

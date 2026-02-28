@@ -3,6 +3,12 @@ Pipeline orchestration: load → score → signal → detect → classify → re
 
 This is the only module with I/O (file loading, report formatting).
 All analytical logic is delegated to scoring, signals, detectors, regime.
+
+v1.1 outputs:
+    - trend.short / trend.long            (multi-horizon)
+    - trend_confidence                     (composite reliability score)
+    - divergence_index                     (cross-domain coherence)
+    - regime_persistence_days              (consecutive days in current regime)
 """
 
 import json
@@ -16,7 +22,9 @@ from zenith.scoring import compute_domain_scores
 from zenith.signals import (
     compute_rolling_means,
     compute_volatility,
-    compute_all_trends,
+    compute_multi_horizon_trends,
+    compute_trend_confidence,
+    compute_divergence_index,
     compute_deviation,
 )
 from zenith.detectors import (
@@ -24,7 +32,7 @@ from zenith.detectors import (
     detect_compensation,
     detect_early_warning,
 )
-from zenith.regime import classify_regime
+from zenith.regime import classify_regime, compute_regime_persistence
 
 
 # ---------------------------------------------------------------------------
@@ -84,43 +92,69 @@ def analyze(
     # Stage 2: Score
     df = compute_domain_scores(df, cfg)
 
-    # Stage 3: Signals
+    # Stage 3: Signals (rolling stats, volatility, burnout flags)
     df = compute_rolling_means(df, cfg)
     df = compute_volatility(df, cfg)
     df = compute_burnout_flags(df, cfg)
 
-    # Stage 4: Extract latest-day snapshot
+    # Stage 4: Multi-horizon trends (Feature 1)
+    # Computes 7d and 30d slopes + R² for global and all domains in one call
+    global_short, global_long, domain_shorts, domain_longs = (
+        compute_multi_horizon_trends(df, cfg)
+    )
+
+    # Stage 5: Extract latest-day snapshot
     latest = df.iloc[-1]
-    global_trend, domain_trends = compute_all_trends(df, cfg)
     deviation = compute_deviation(df)
     volatility = round(float(latest["volatility_index"]), 3)
 
-    # Stage 5: Detect patterns
-    compensation_flags = detect_compensation(domain_trends, cfg)
+    # Stage 6: Trend confidence (Feature 2)
+    trend_confidence = compute_trend_confidence(
+        short_trend=global_short,
+        long_trend=global_long,
+        volatility=volatility,
+        cfg=cfg,
+    )
+
+    # Stage 7: Cross-domain divergence (Feature 3)
+    divergence_index = compute_divergence_index(domain_shorts)
+
+    # Stage 8: Detect patterns (uses short-window domain trends)
+    compensation_flags = detect_compensation(domain_shorts, cfg)
     early_warning = detect_early_warning(
-        trend_label=global_trend["label"],
+        trend_label=global_short["label"],
         deviation=deviation,
         volatility=volatility,
         cfg=cfg,
     )
 
-    # Stage 6: Classify regime
+    # Stage 9: Classify regime + persistence (Feature 4)
     regime = classify_regime(
-        slope=global_trend["slope"],
+        slope=global_short["slope"],
         volatility=volatility,
         cfg=cfg,
     )
+    regime_persistence_days = compute_regime_persistence(df, cfg)
 
     return {
         "global_balance": round(float(latest["global_balance"]), 3),
-        "trend": global_trend,
-        "domain_trends": domain_trends,
+        "trend": {
+            "short": global_short,
+            "long": global_long,
+        },
+        "domain_trends": {
+            "short": domain_shorts,
+            "long": domain_longs,
+        },
+        "trend_confidence": trend_confidence,
+        "divergence_index": divergence_index,
         "volatility": volatility,
         "burnout_risk": bool(latest["burnout_flag"]),
         "deviation": deviation,
         "compensation_flags": compensation_flags,
         "early_warning": early_warning,
         "regime": regime,
+        "regime_persistence_days": regime_persistence_days,
     }
 
 
@@ -130,23 +164,37 @@ def analyze(
 
 def generate_report(result: Dict) -> str:
     """Format the analysis result as a human-readable text report."""
+    t_short = result["trend"]["short"]
+    t_long = result["trend"]["long"]
+
     lines = [
         "ZENITH STATUS REPORT",
-        "=" * 50,
+        "=" * 58,
         "",
-        f"  Global Balance : {result['global_balance']}",
-        f"  Trend          : {result['trend']['label']} (slope: {result['trend']['slope']})",
-        f"  Regime         : {result['regime']}",
-        f"  Volatility     : {result['volatility']}",
-        f"  Deviation      : {result['deviation']}",
-        f"  Burnout Risk   : {'YES' if result['burnout_risk'] else 'No'}",
+        f"  Global Balance      : {result['global_balance']}",
+        f"  Trend (7d)          : {t_short['label']} (slope: {t_short['slope']}, R²: {t_short['r_squared']})",
+        f"  Trend (30d)         : {t_long['label']} (slope: {t_long['slope']}, R²: {t_long['r_squared']})",
+        f"  Trend Confidence    : {result['trend_confidence']}",
+        f"  Regime              : {result['regime']} ({result['regime_persistence_days']}d streak)",
+        f"  Volatility          : {result['volatility']}",
+        f"  Divergence Index    : {result['divergence_index']}",
+        f"  Deviation (7d-30d)  : {result['deviation']}",
+        f"  Burnout Risk        : {'YES' if result['burnout_risk'] else 'No'}",
         "",
-        "  Domain Trends:",
+        "  Domain Trends (7d / 30d):",
     ]
 
-    for name, trend in result["domain_trends"].items():
+    d_short = result["domain_trends"]["short"]
+    d_long = result["domain_trends"]["long"]
+
+    for name in d_short:
         label = name.replace("_", " ").title()
-        lines.append(f"    {label:15s} : {trend['label']} (slope: {trend['slope']})")
+        s = d_short[name]
+        l = d_long[name]
+        lines.append(
+            f"    {label:15s} : {s['label']:22s} (slope: {s['slope']:+.4f})"
+            f"  |  {l['label']:22s} (slope: {l['slope']:+.4f})"
+        )
 
     if result["compensation_flags"]:
         lines.append("")
@@ -159,5 +207,5 @@ def generate_report(result: Dict) -> str:
         lines.append("  ⚠  EARLY WARNING: System entering decline trajectory")
 
     lines.append("")
-    lines.append("=" * 50)
+    lines.append("=" * 58)
     return "\n".join(lines)
