@@ -4,11 +4,10 @@ Pipeline orchestration: load → score → signal → detect → classify → re
 This is the only module with I/O (file loading, report formatting).
 All analytical logic is delegated to scoring, signals, detectors, regime.
 
-v1.1 outputs:
-    - trend.short / trend.long            (multi-horizon)
-    - trend_confidence                     (composite reliability score)
-    - divergence_index                     (cross-domain coherence)
-    - regime_persistence_days              (consecutive days in current regime)
+v1.2 updates:
+    - Core analysis extracted to _analyze_df (pure function)
+    - Added analyze_data() for UI/backend integration
+    - CLI compatibility preserved via analyze(filepath)
 """
 
 import json
@@ -36,7 +35,7 @@ from zenith.regime import classify_regime, compute_regime_persistence
 
 
 # ---------------------------------------------------------------------------
-# Data loading
+# Data loading (CLI mode only)
 # ---------------------------------------------------------------------------
 
 REQUIRED_COLUMNS = {
@@ -70,45 +69,36 @@ def load_data(filepath: Union[str, Path]) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
-# Main analysis
+# Core analysis (PURE FUNCTION — NO FILE I/O)
 # ---------------------------------------------------------------------------
 
-def analyze(
-    filepath: Union[str, Path],
-    cfg: ZenithConfig | None = None,
-) -> Dict:
+def _analyze_df(df: pd.DataFrame, cfg: ZenithConfig) -> Dict:
     """
-    Run the full Zenith analysis pipeline.
+    Core analysis operating purely on a DataFrame.
 
-    Returns a structured result dict suitable for downstream consumption
-    (reporting, serialization, or future ML feature extraction).
+    Stateless.
+    No file reads.
+    Safe for backend / API usage.
     """
-    if cfg is None:
-        cfg = ZenithConfig()
 
-    # Stage 1: Load + validate
-    df = load_data(filepath)
-
-    # Stage 2: Score
+    # Stage 1: Score
     df = compute_domain_scores(df, cfg)
 
-    # Stage 3: Signals (rolling stats, volatility, burnout flags)
+    # Stage 2: Signals
     df = compute_rolling_means(df, cfg)
     df = compute_volatility(df, cfg)
     df = compute_burnout_flags(df, cfg)
 
-    # Stage 4: Multi-horizon trends (Feature 1)
-    # Computes 7d and 30d slopes + R² for global and all domains in one call
+    # Stage 3: Multi-horizon trends
     global_short, global_long, domain_shorts, domain_longs = (
         compute_multi_horizon_trends(df, cfg)
     )
 
-    # Stage 5: Extract latest-day snapshot
     latest = df.iloc[-1]
     deviation = compute_deviation(df)
     volatility = round(float(latest["volatility_index"]), 3)
 
-    # Stage 6: Trend confidence (Feature 2)
+    # Stage 4: Confidence + divergence
     trend_confidence = compute_trend_confidence(
         short_trend=global_short,
         long_trend=global_long,
@@ -116,11 +106,11 @@ def analyze(
         cfg=cfg,
     )
 
-    # Stage 7: Cross-domain divergence (Feature 3)
     divergence_index = compute_divergence_index(domain_shorts)
 
-    # Stage 8: Detect patterns (uses short-window domain trends)
+    # Stage 5: Pattern detection
     compensation_flags = detect_compensation(domain_shorts, cfg)
+
     early_warning = detect_early_warning(
         trend_label=global_short["label"],
         deviation=deviation,
@@ -128,12 +118,13 @@ def analyze(
         cfg=cfg,
     )
 
-    # Stage 9: Classify regime + persistence (Feature 4)
+    # Stage 6: Regime classification
     regime = classify_regime(
         slope=global_short["slope"],
         volatility=volatility,
         cfg=cfg,
     )
+
     regime_persistence_days = compute_regime_persistence(df, cfg)
 
     return {
@@ -159,7 +150,55 @@ def analyze(
 
 
 # ---------------------------------------------------------------------------
-# Report generation
+# Public Entry Points
+# ---------------------------------------------------------------------------
+
+def analyze(
+    filepath: Union[str, Path],
+    cfg: ZenithConfig | None = None,
+) -> Dict:
+    """
+    CLI-compatible entry point.
+    Reads JSON file and runs analysis.
+    """
+    if cfg is None:
+        cfg = ZenithConfig()
+
+    df = load_data(filepath)
+    return _analyze_df(df, cfg)
+
+
+def analyze_data(
+    data: list[dict],
+    cfg: ZenithConfig | None = None,
+) -> Dict:
+    """
+    Backend / UI integration entry point.
+
+    Accepts list-of-dict JSON data directly.
+    No file system usage.
+    """
+    if cfg is None:
+        cfg = ZenithConfig()
+
+    if not data:
+        raise ValueError("Input data cannot be empty")
+
+    df = pd.DataFrame(data)
+
+    missing = REQUIRED_COLUMNS - set(df.columns)
+    if missing:
+        raise ValueError(f"Missing required columns: {missing}")
+
+    df["date"] = pd.to_datetime(df["date"])
+    df.sort_values("date", inplace=True)
+    df.reset_index(drop=True, inplace=True)
+
+    return _analyze_df(df, cfg)
+
+
+# ---------------------------------------------------------------------------
+# Report generation (unchanged)
 # ---------------------------------------------------------------------------
 
 def generate_report(result: Dict) -> str:
