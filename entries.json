@@ -1,0 +1,52 @@
+[
+  {
+    "date": "2026-03-01",
+    "tasks_completed": 5,
+    "tasks_total": 7,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.5,
+    "mood": 7,
+    "stress": 4,
+    "recovery": 6
+  },
+  {
+    "date": "2026-03-02",
+    "tasks_completed": 6,
+    "tasks_total": 8,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 7.0,
+    "mood": 8,
+    "stress": 3,
+    "recovery": 7
+  },
+  {
+    "date": "2026-03-03",
+    "tasks_completed": 6,
+    "tasks_total": 7,
+    "deep_work_hours": 5.5,
+    "sleep_hours": 7.5,
+    "mood": 8,
+    "stress": 3,
+    "recovery": 7
+  },
+  {
+    "date": "2026-03-04",
+    "tasks_completed": 7,
+    "tasks_total": 8,
+    "deep_work_hours": 6.0,
+    "sleep_hours": 7.0,
+    "mood": 7,
+    "stress": 4,
+    "recovery": 6
+  },
+  {
+    "date": "2026-03-04",
+    "tasks_completed": 8,
+    "tasks_total": 12,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 6.0,
+    "mood": 8,
+    "stress": 6,
+    "recovery": 7
+  }
+]

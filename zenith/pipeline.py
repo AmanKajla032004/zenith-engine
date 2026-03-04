@@ -243,7 +243,7 @@ def generate_report(result: Dict) -> str:
 
     if result["early_warning"]:
         lines.append("")
-        lines.append("  ⚠  EARLY WARNING: System entering decline trajectory")
+        lines.append(" EARLY WARNING: System entering decline trajectory")
 
     lines.append("")
     lines.append("=" * 58)
