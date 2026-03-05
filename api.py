@@ -1,29 +1,23 @@
-"""Thin FastAPI wrapper for Zenith v1.2 — persistence layer only."""
+"""
+api.py
+
+FastAPI bridge between the Axiom frontend and the Zenith
+behavioral intelligence engine. Provides entry submission
+and insight retrieval via a lightweight REST interface.
+"""
 
 import json
-import pathlib
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from zenith import analyze_data
+from zenith.engine import run_zenith
 
-app = FastAPI(title="Zenith API", version="1.2.0")
+app = FastAPI()
 
-# ✅ CORS FIX (must be right after app creation)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+ENTRIES_FILE = Path("entries.json")
 
-ENTRIES_FILE = pathlib.Path("entries.json")
-
-
-# ── Schema ───────────────────────────────────────────────────────────────────
 
 class Entry(BaseModel):
     date: str
@@ -36,45 +30,40 @@ class Entry(BaseModel):
     recovery: int
 
 
-# ── Helpers ──────────────────────────────────────────────────────────────────
-
-def _read_entries() -> list[dict]:
+def load_entries() -> list:
+    """Read entries from entries.json and return as list."""
     if not ENTRIES_FILE.exists():
         return []
     with open(ENTRIES_FILE, "r") as f:
         return json.load(f)
 
 
-def _write_entries(entries: list[dict]) -> None:
+def save_entries(entries: list) -> None:
+    """Write entries list to entries.json."""
     with open(ENTRIES_FILE, "w") as f:
-        json.dump(entries, f, indent=2, default=str)
+        json.dump(entries, f, indent=2)
 
-
-# ── Endpoints ────────────────────────────────────────────────────────────────
 
 @app.get("/health")
 def health():
-    return {"status": "OK"}
+    return {"status": "ok"}
 
 
-@app.post("/submit-entry", status_code=201)
+@app.post("/submit-entry")
 def submit_entry(entry: Entry):
-    entries = _read_entries()
+    entries = load_entries()
     entries.append(entry.model_dump())
-    _write_entries(entries)
-    return {"message": "Entry saved", "total_entries": len(entries)}
+    save_entries(entries)
+    return {"status": "entry stored"}
 
 
 @app.get("/insights")
 def insights():
-    entries = _read_entries()
-
+    entries = load_entries()
     if not entries:
         raise HTTPException(status_code=400, detail="No entries found")
-
     try:
-        result = analyze_data(entries)
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
-
-    return result
+        insights = run_zenith(entries)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return insights
