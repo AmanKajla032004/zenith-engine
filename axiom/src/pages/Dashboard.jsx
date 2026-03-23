@@ -1,277 +1,234 @@
-import { useState, useEffect } from "react";
+import React from "react";
+import { useInsights } from "../hooks/useInsights";
+import StateRadarChart from "../components/StateVector/StateRadarChart";
+import BalanceScoreGauge from "../components/BalanceRegime/BalanceScoreGauge";
+import RegimeBadge from "../components/BalanceRegime/RegimeBadge";
+import RiskPanel from "../components/RiskIndicators/RiskPanel";
+import PressureIndicator from "../components/WorkloadPressure/PressureIndicator";
+import BehavioralTrendChart from "../components/Trends/BehavioralTrendChart";
+import EntryForm from "../components/EntryForm/EntryForm";
+import MetricCard from "../components/common/MetricCard";
+import ThemeToggle from "../components/common/ThemeToggle";
 
-const API = "http://127.0.0.1:8000/insights";
-
-const trendColor = (label) => {
-  if (!label) return "#a1a1aa";
-  const l = label.toLowerCase();
-  if (l.includes("improving") || l.includes("rising")) return "#4ade80";
-  if (l.includes("declining") || l.includes("falling")) return "#f87171";
-  return "#a1a1aa";
+const REGIME_COLOR = {
+  stable:          "var(--success)",
+  moderate_strain: "var(--warning)",
+  overloaded:      "var(--danger)",
+  declining:       "#f97316",
 };
 
-const humanizeFlag = (flag) =>
-  flag
-    .replace(/\bcompensating\s+([\w/]+)\s+decline\b/gi, "compensating for declining $1")
-    .replace(/\bmasking\s+([\w/]+)\s+decline\b/gi, "masking declining $1")
-    .replace(/\boffsetting\s+([\w/]+)\s+drop\b/gi, "offsetting drop in $1");
-
-const generateInterpretation = (data) => {
-  const parts = [];
-
-  const b = data.global_balance;
-  if (b >= 7) parts.push("Strong overall balance");
-  else if (b >= 5) parts.push("Moderate balance");
-  else parts.push("Low balance");
-
-  const shortLabel = data.trend?.short?.label?.toLowerCase() || "";
-  if (shortLabel.includes("declining")) parts.push("with recent downward movement");
-  else if (shortLabel.includes("improving")) parts.push("with recent upward movement");
-
-  if (data.compensation_flags?.length > 0)
-    parts.push("Performance appears to be compensating for declines in other domains");
-
-  let result = parts[0];
-  if (parts[1]?.startsWith("with")) result += " " + parts[1];
-  const rest = parts.slice(parts[1]?.startsWith("with") ? 2 : 1);
-  if (rest.length) result += ". " + rest.join(". ");
-
-  if (data.burnout_risk) result += ". Burnout risk indicators detected";
-
-  return result + ".";
+const REGIME_BORDER = {
+  stable:          "#22c55e",
+  moderate_strain: "#f59e0b",
+  overloaded:      "#ef4444",
+  declining:       "#f97316",
 };
 
-export default function Dashboard() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+const REGIME_SHADOW = {
+  stable:          "0 4px 16px rgba(34, 197, 94, 0.12)",
+  moderate_strain: "0 4px 16px rgba(245, 158, 11, 0.12)",
+  overloaded:      "0 4px 16px rgba(239, 68, 68, 0.12)",
+  declining:       "0 4px 16px rgba(249, 115, 22, 0.12)",
+};
 
-  useEffect(() => {
-    fetch(API)
-      .then((r) => {
-        if (!r.ok) throw new Error(r.status);
-        return r.json();
-      })
-      .then(setData)
-      .catch(() => setData(null))
-      .finally(() => setLoading(false));
-  }, []);
+const REGIME_LABEL = {
+  stable: "stable",
+  moderate_strain: "moderate strain",
+  overloaded: "overloaded",
+  declining: "declining",
+};
 
-  if (loading) {
-    return <p style={{ color: "#52525b", fontSize: "0.85rem" }}>Loading…</p>;
-  }
-
-  if (!data) {
-    return (
-      <div style={styles.card}>
-        <h1 style={styles.value}>--</h1>
-        <p style={styles.regime}>Awaiting Data</p>
-      </div>
-    );
-  }
-
-  const ds = data.domain_trends?.short || {};
-  const hasFlags = data.compensation_flags?.length > 0;
-  const domains = [
-    { key: "recovery", name: "Recovery" },
-    { key: "emotional", name: "Emotional" },
-    { key: "performance", name: "Performance" },
-    { key: "energy_focus", name: "Energy / Focus" },
-  ];
-
-  return (
-    <div style={styles.wrap}>
-      {/* ── State Card ── */}
-      <div style={styles.card}>
-        <p style={styles.label} title="Overall behavioral balance (0–10 scale). Higher values indicate stronger overall system stability.">Global Balance</p>
-        <h1 style={styles.value}>{data.global_balance ?? "--"}</h1>
-        <p style={styles.regime} title="Current system regime derived from recent behavioral patterns.">{data.regime ?? "Unknown"}</p>
-        {data.regime_persistence_days != null && (
-          <p style={styles.persistence} title="Number of consecutive days the system has remained in this regime.">
-            {data.regime_persistence_days}d in regime
-          </p>
-        )}
-        {data.burnout_risk && <p style={styles.burnout}>Burnout risk elevated</p>}
-      </div>
-
-      {/* ── System Interpretation ── */}
-      <div style={styles.section}>
-        <p style={styles.sectionTitle}>System Interpretation</p>
-        <p style={styles.interpretation}>{generateInterpretation(data)}</p>
-      </div>
-
-      {/* ── Trend Overview ── */}
-      <div style={styles.section}>
-        <p style={styles.sectionTitle}>Trends</p>
-        <div style={styles.grid}>
-          <div style={styles.cell} title="Recent directional movement in overall balance.">
-            <p style={styles.cellLabel}>Short</p>
-            <p style={{ ...styles.cellValue, color: trendColor(data.trend?.short?.label) }}>
-              {data.trend?.short?.label ?? "—"}
-            </p>
-          </div>
-          <div style={styles.cell} title="Longer-term directional movement across the observation window.">
-            <p style={styles.cellLabel}>Long</p>
-            <p style={{ ...styles.cellValue, color: trendColor(data.trend?.long?.label) }}>
-              {data.trend?.long?.label ?? "—"}
-            </p>
-          </div>
-          <div style={styles.cell} title="Trend strength indicates statistical confidence in the detected direction. Higher values mean stronger directional consistency (0–1 scale).">
-            <p style={styles.cellLabel}>Confidence</p>
-            <p style={styles.cellValue}>
-              {data.trend_confidence != null
-                ? data.trend_confidence.toFixed(2)
-                : "—"}
-            </p>
-          </div>
-          <div style={styles.cell} title="Degree of fluctuation in overall balance. Higher values indicate greater instability.">
-            <p style={styles.cellLabel}>Volatility</p>
-            <p style={styles.cellValue}>
-              {data.volatility != null ? data.volatility.toFixed(2) : "—"}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Domain Signals ── */}
-      <div style={styles.section}>
-        <p style={styles.sectionTitle}>Domain Signals</p>
-        <div style={styles.grid}>
-          {domains.map((d) => {
-            const label = ds[d.key]?.label ?? "—";
-            return (
-              <div style={styles.cell} key={d.key} title="Recent directional movement within this domain.">
-                <p style={styles.cellLabel}>{d.name}</p>
-                <p style={{ ...styles.cellValue, color: trendColor(label) }}>
-                  {label}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── System Signals ── */}
-      {(hasFlags || data.early_warning) && (
-        <div style={styles.section}>
-          <p style={styles.sectionTitle} title="Cross-domain behavioral interactions detected by the system.">System Signals</p>
-          <div style={styles.signals}>
-            {hasFlags &&
-              data.compensation_flags.map((flag, i) => (
-                <p style={styles.signal} key={i}>· {humanizeFlag(flag)}</p>
-              ))}
-            {data.early_warning && (
-              <p style={styles.signal}>· Early warning signal detected</p>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  );
+function getPressureLabel(pressure) {
+  if (pressure > 4) return "critical";
+  if (pressure >= 2) return "elevated";
+  return "normal";
 }
 
-const styles = {
-  wrap: {
-    width: "100%",
-    maxWidth: "480px",
-    padding: "0 1.5rem",
-    display: "flex",
-    flexDirection: "column",
-    gap: "1.5rem",
-  },
-  card: {
-    textAlign: "center",
-    padding: "2.5rem 3rem",
-    background: "#18181b",
-    borderRadius: "12px",
-    border: "1px solid #27272a",
-    boxShadow: "0 4px 24px rgba(0,0,0,0.4)",
-  },
-  label: {
-    fontSize: "0.7rem",
-    textTransform: "uppercase",
-    letterSpacing: "0.12em",
-    color: "#71717a",
-    margin: "0 0 0.5rem",
-  },
-  value: {
-    fontSize: "3.5rem",
-    fontWeight: 700,
-    margin: "0 0 0.25rem",
-    color: "#fafafa",
-  },
-  regime: {
-    fontSize: "1rem",
-    color: "#a1a1aa",
-    margin: 0,
-  },
-  persistence: {
-    fontSize: "0.7rem",
-    color: "#52525b",
-    margin: "0.4rem 0 0",
-  },
-  burnout: {
-    fontSize: "0.7rem",
-    color: "#f87171",
-    margin: "0.6rem 0 0",
-    letterSpacing: "0.04em",
-  },
-  section: {
-    background: "#18181b",
-    borderRadius: "12px",
-    border: "1px solid #27272a",
-    padding: "1.25rem 1.5rem",
-  },
-  sectionTitle: {
-    fontSize: "0.7rem",
-    textTransform: "uppercase",
-    letterSpacing: "0.1em",
-    color: "#52525b",
-    margin: "0 0 1rem",
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "1rem",
-  },
-  cell: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.2rem",
-  },
-  cellLabel: {
-    fontSize: "0.65rem",
-    textTransform: "uppercase",
-    letterSpacing: "0.08em",
-    color: "#71717a",
-    margin: 0,
-  },
-  cellValue: {
-    fontSize: "0.9rem",
-    fontWeight: 500,
-    color: "#a1a1aa",
-    margin: 0,
-  },
-  signals: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.5rem",
-  },
-  signal: {
-    fontSize: "0.85rem",
-    color: "#d4d4d8",
-    margin: 0,
-    lineHeight: 1.4,
-    background: "#141416",
-    borderLeft: "2px solid #3f3f46",
-    paddingLeft: "10px",
-  },
-  interpretation: {
-    fontSize: "0.85rem",
-    color: "#d4d4d8",
-    margin: 0,
-    lineHeight: 1.5,
-    background: "#141416",
-    borderLeft: "2px solid #3f3f46",
-    padding: "10px",
-  },
-};
+export default function Dashboard() {
+  const { insights, loading, error, refreshInsights, insightsHistory } = useInsights();
+
+  if (loading) {
+    return <div className="dashboard-status">Loading insights...</div>;
+  }
+
+  if (error) {
+    return <div className="dashboard-status dashboard-error">Error: {error}</div>;
+  }
+
+  if (!insights) {
+    return <div className="dashboard-status">No insight data available.</div>;
+  }
+
+  const interp = insights.interpretation;
+  const regime = insights.regime;
+  const regimeColor = REGIME_COLOR[regime] || "var(--text-secondary)";
+  const pressureLabel = getPressureLabel(insights.behavioral_pressure_index);
+
+  return (
+    <div className="dashboard-container" style={{ gap: "16px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h1 className="dashboard-title">Axiom — Behavioral Intelligence</h1>
+        <ThemeToggle />
+      </div>
+
+      {/* 0. System Status Header */}
+      <div className="card" style={{
+        padding: "14px 20px",
+        borderLeft: `3px solid ${REGIME_BORDER[regime] || "var(--border-card)"}`,
+      }}>
+        <p style={{
+          fontSize: "0.88rem",
+          color: "var(--text-primary)",
+          margin: 0,
+          lineHeight: 1.5,
+        }}>
+          System is in{" "}
+          <span style={{ fontWeight: 600, color: regimeColor }}>
+            {REGIME_LABEL[regime] || regime}
+          </span>
+          {" "}driven by{" "}
+          <span style={{ fontWeight: 600, color: "var(--accent-blue)" }}>
+            {insights.dominant_driver}
+          </span>
+          {" "}with{" "}
+          <span style={{ fontWeight: 600 }}>
+            {pressureLabel}
+          </span>
+          {" "}pressure.
+        </p>
+      </div>
+
+      <section className="card">
+        <h2 className="section-title">Submit Daily Entry</h2>
+        <EntryForm onEntrySubmitted={refreshInsights} />
+      </section>
+
+      {/* 1. Metric Cards */}
+      <div className="dashboard-grid metrics-row">
+        <div className="card metric-card-equal" style={{
+          borderColor: REGIME_BORDER[regime] || "var(--border-card)",
+          borderWidth: "1.5px",
+          boxShadow: REGIME_SHADOW[regime] || "var(--shadow-soft)",
+        }}>
+          <p style={{
+            fontSize: "0.7rem",
+            fontWeight: 600,
+            textTransform: "uppercase",
+            letterSpacing: "0.06em",
+            color: "var(--text-secondary)",
+            margin: 0,
+          }}>Balance Score</p>
+          <p style={{
+            fontSize: "2.8rem",
+            fontWeight: 700,
+            letterSpacing: "-0.02em",
+            color: "var(--text-primary)",
+            margin: "6px 0 2px",
+            lineHeight: 1.1,
+          }}>{insights.balance_score?.toFixed(2)}</p>
+          <p style={{
+            fontSize: "0.8rem",
+            color: "var(--text-secondary)",
+            margin: 0,
+          }}>{insights.regime}</p>
+        </div>
+        <MetricCard label="Pressure Index" value={insights.behavioral_pressure_index?.toFixed(2)} />
+        <MetricCard label="Burnout Risk" value={`${(insights.burnout_probability * 100).toFixed(0)}%`} />
+        <MetricCard label="Fatigue Risk" value={`${(insights.fatigue_probability * 100).toFixed(0)}%`} />
+      </div>
+
+      {/* 2. System Insight Panel */}
+      <section className="card" style={{
+        padding: "30px 32px",
+        background: "var(--bg-insight)",
+        borderLeft: `3px solid ${REGIME_BORDER[regime] || "var(--accent-blue)"}`,
+      }}>
+        <h2 className="section-title">System Insight</h2>
+        <p style={{
+          fontSize: "1.1rem",
+          color: regimeColor,
+          lineHeight: 1.6,
+          margin: "0 0 16px",
+          fontWeight: 500,
+          opacity: 0.85,
+        }}>
+          {interp.summary}
+        </p>
+        <div style={{
+          padding: "16px",
+          background: "var(--bg-primary)",
+          borderRadius: "10px",
+          border: "1px solid var(--border-card)",
+        }}>
+          <p style={{
+            fontSize: "0.78rem",
+            fontWeight: 600,
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            color: "var(--accent-blue)",
+            margin: "0 0 8px",
+          }}>
+            {interp.title}
+          </p>
+          <p style={{
+            fontSize: "0.9rem",
+            color: "var(--text-secondary)",
+            lineHeight: 1.7,
+            margin: "0 0 12px",
+          }}>
+            {interp.explanation}
+          </p>
+          <p style={{
+            fontSize: "0.85rem",
+            color: "var(--text-primary)",
+            lineHeight: 1.6,
+            margin: 0,
+            padding: "10px 14px",
+            background: "var(--accent-soft)",
+            borderRadius: "8px",
+            border: "1px solid var(--accent-border)",
+          }}>
+            {interp.impact}
+          </p>
+        </div>
+      </section>
+
+      {/* 3. Risk + Pressure + State + Balance */}
+      <div className="dashboard-grid">
+        <section className="card">
+          <h2 className="section-title">Risk Indicators</h2>
+          <RiskPanel
+            burnout={insights.burnout_probability}
+            fatigue={insights.fatigue_probability}
+            recoveryFailure={insights.recovery_failure_probability}
+          />
+        </section>
+
+        <section className="card">
+          <h2 className="section-title">Workload Pressure</h2>
+          <PressureIndicator
+            pressure={insights.behavioral_pressure_index}
+            capacityMismatch={insights.capacity_mismatch}
+          />
+        </section>
+
+        <section className="card">
+          <h2 className="section-title">State Vector</h2>
+          <StateRadarChart state={insights.state} />
+        </section>
+
+        <section className="card">
+          <h2 className="section-title">Balance &amp; Regime</h2>
+          <BalanceScoreGauge score={insights.balance_score} />
+          <RegimeBadge regime={insights.regime} />
+        </section>
+      </div>
+
+      {/* 4. Behavioral Trends */}
+      <section className="card">
+        <h2 className="section-title">Behavioral Trends</h2>
+        <BehavioralTrendChart data={insightsHistory} />
+      </section>
+    </div>
+  );
+} 

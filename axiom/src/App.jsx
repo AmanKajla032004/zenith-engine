@@ -26,7 +26,7 @@ export default function App() {
 }
 
 const link = (active) => ({
-  color: active ? "#f4f4f5" : "#71717a",
+  color: active ? "var(--text-primary)" : "var(--text-secondary)",
   textDecoration: "none",
   fontSize: "0.8rem",
   letterSpacing: "0.06em",
@@ -37,9 +37,9 @@ const link = (active) => ({
 const styles = {
   shell: {
     minHeight: "100vh",
-    background: "#0e0e10",
-    fontFamily: "-apple-system, 'Helvetica Neue', sans-serif",
-    color: "#e4e4e7",
+    background: "var(--bg-primary)",
+    fontFamily: "var(--font-family)",
+    color: "var(--text-primary)",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -48,9 +48,10 @@ const styles = {
     display: "flex",
     gap: "2rem",
     padding: "1.25rem 0",
-    borderBottom: "1px solid #1c1c1f",
+    borderBottom: "1px solid var(--border-card)",
     width: "100%",
     justifyContent: "center",
+    background: "var(--bg-card)",
   },
   main: {
     flex: 1,

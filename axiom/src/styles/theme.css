@@ -1,0 +1,149 @@
+:root {
+  --bg-primary: #02040a;
+  --bg-surface: #0a0e17;
+  --bg-card: rgba(20, 26, 40, 0.75);
+
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+
+  --accent-blue: #7aa2f7;
+  --accent-purple: #bb9af7;
+  --accent-cyan: #7dcfff;
+
+  --success: #3fb950;
+  --warning: #e3b341;
+  --danger: #f85149;
+
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+
+  --shadow-soft: 0 10px 50px rgba(0, 0, 0, 0.9);
+
+  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background:
+    radial-gradient(circle at 15% 15%, rgba(122, 162, 247, 0.10), transparent 40%),
+    radial-gradient(circle at 85% 5%, rgba(187, 154, 247, 0.08), transparent 50%),
+    var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+}
+
+p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ── Glass Card ── */
+
+.card {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(35, 45, 65, 0.45),
+    rgba(18, 24, 38, 0.65)
+  );
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.08),
+    transparent 40%
+  );
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 18px 70px rgba(0, 0, 0, 0.95),
+    0 0 30px rgba(122, 162, 247, 0.15);
+}
+
+/* ── Section Title ── */
+
+.section-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #7d8590;
+  margin-bottom: 14px;
+}
+
+/* ── Metric Value ── */
+
+.metric-value {
+  font-size: 2.4rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  text-shadow: 0 0 10px rgba(122, 162, 247, 0.15);
+}
+
+/* ── Inputs ── */
+
+input[type="number"] {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+}
+
+input[type="number"]:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.2);
+}

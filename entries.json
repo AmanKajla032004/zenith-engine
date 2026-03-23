@@ -48,5 +48,335 @@
     "mood": 8,
     "stress": 6,
     "recovery": 7
+  },
+  {
+    "date": "2026-03-05",
+    "tasks_completed": 5,
+    "tasks_total": 9,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 3.0,
+    "mood": 4,
+    "stress": 5,
+    "recovery": 4
+  },
+  {
+    "date": "2026-03-05",
+    "tasks_completed": 5,
+    "tasks_total": 5,
+    "deep_work_hours": 3.0,
+    "sleep_hours": 7.0,
+    "mood": 7,
+    "stress": 3,
+    "recovery": 7
+  },
+  {
+    "date": "2026-03-06",
+    "tasks_completed": 3,
+    "tasks_total": 5,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 7.0,
+    "mood": 6,
+    "stress": 7,
+    "recovery": 6
+  },
+  {
+    "date": "2026-03-20",
+    "tasks_completed": 5,
+    "tasks_total": 8,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 7.5,
+    "mood": 7,
+    "stress": 4,
+    "recovery": 7
+  },
+  {
+    "date": "2026-03-20",
+    "tasks_completed": 3,
+    "tasks_total": 5,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 7,
+    "stress": 4,
+    "recovery": 7
+  },
+  {
+    "date": "2026-03-20",
+    "tasks_completed": 7,
+    "tasks_total": 5,
+    "deep_work_hours": 2.0,
+    "sleep_hours": 7.0,
+    "mood": 7,
+    "stress": 3,
+    "recovery": 7
+  },
+  {
+    "date": "2026-03-20",
+    "tasks_completed": 2,
+    "tasks_total": 7,
+    "deep_work_hours": 3.0,
+    "sleep_hours": 6.0,
+    "mood": 5,
+    "stress": 6,
+    "recovery": 6
+  },
+  {
+    "date": "2026-03-20",
+    "tasks_completed": 5,
+    "tasks_total": 5,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 8,
+    "stress": 2,
+    "recovery": 8
+  },
+  {
+    "date": "2026-03-20",
+    "tasks_completed": 16,
+    "tasks_total": 25,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 7.0,
+    "mood": 8,
+    "stress": 5,
+    "recovery": 7
+  },
+  {
+    "date": "2026-03-20",
+    "tasks_completed": 8,
+    "tasks_total": 10,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 8,
+    "stress": 6,
+    "recovery": 6
+  },
+  {
+    "date": "2026-03-20",
+    "tasks_completed": 5,
+    "tasks_total": 8,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 7.0,
+    "mood": 7,
+    "stress": 5,
+    "recovery": 7
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 45,
+    "tasks_total": 46,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 8.0,
+    "mood": 8,
+    "stress": 6,
+    "recovery": 7
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 4,
+    "tasks_total": 6,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 8.0,
+    "mood": 8,
+    "stress": 6,
+    "recovery": 8
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 5,
+    "tasks_total": 7,
+    "deep_work_hours": 3.0,
+    "sleep_hours": 7.5,
+    "mood": 7,
+    "stress": 5,
+    "recovery": 8
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 5,
+    "tasks_total": 5,
+    "deep_work_hours": 3.0,
+    "sleep_hours": 7.0,
+    "mood": 8,
+    "stress": 2,
+    "recovery": 8
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 5,
+    "tasks_total": 8,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 7,
+    "stress": 3,
+    "recovery": 9
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 5,
+    "tasks_total": 7,
+    "deep_work_hours": 6.0,
+    "sleep_hours": 7.0,
+    "mood": 9,
+    "stress": 2,
+    "recovery": 9
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 5,
+    "tasks_total": 6,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 7.0,
+    "mood": 10,
+    "stress": 10,
+    "recovery": 10
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 6,
+    "tasks_total": 6,
+    "deep_work_hours": 3.0,
+    "sleep_hours": 7.0,
+    "mood": 10,
+    "stress": 1,
+    "recovery": 10
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 10,
+    "tasks_total": 10,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 7.0,
+    "mood": 10,
+    "stress": 1,
+    "recovery": 10
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 4,
+    "tasks_total": 6,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 9,
+    "stress": 2,
+    "recovery": 8
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 5,
+    "tasks_total": 7,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 7.0,
+    "mood": 6,
+    "stress": 7,
+    "recovery": 7
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 4,
+    "tasks_total": 5,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 7.0,
+    "mood": 7,
+    "stress": 4,
+    "recovery": 8
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 6,
+    "tasks_total": 7,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 7.0,
+    "mood": 9,
+    "stress": 2,
+    "recovery": 6
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 9,
+    "tasks_total": 8,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 7.0,
+    "mood": 10,
+    "stress": 2,
+    "recovery": 8
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 6,
+    "tasks_total": 6,
+    "deep_work_hours": 6.0,
+    "sleep_hours": 7.0,
+    "mood": 4,
+    "stress": 7,
+    "recovery": 6
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 5,
+    "tasks_total": 7,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 7,
+    "stress": 3,
+    "recovery": 7
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 3,
+    "tasks_total": 5,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 8,
+    "stress": 4,
+    "recovery": 9
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 5,
+    "tasks_total": 7,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 8.0,
+    "mood": 9,
+    "stress": 2,
+    "recovery": 8
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 5,
+    "tasks_total": 15,
+    "deep_work_hours": 1.0,
+    "sleep_hours": 8.0,
+    "mood": 6,
+    "stress": 6,
+    "recovery": 5
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 5,
+    "tasks_total": 6,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 8.0,
+    "mood": 8,
+    "stress": 2,
+    "recovery": 8
+  },
+  {
+    "date": "2026-03-22",
+    "tasks_completed": 4,
+    "tasks_total": 5,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 8,
+    "stress": 2,
+    "recovery": 10
+  },
+  {
+    "date": "2026-03-23",
+    "tasks_completed": 5,
+    "tasks_total": 5,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 8,
+    "stress": 3,
+    "recovery": 8
   }
 ]

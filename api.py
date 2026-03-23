@@ -1,22 +1,20 @@
-"""
-api.py
-
-FastAPI bridge between the Axiom frontend and the Zenith
-behavioral intelligence engine. Provides entry submission
-and insight retrieval via a lightweight REST interface.
-"""
-
-import json
-from pathlib import Path
-
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
+import json
 from zenith.engine import run_zenith
 
 app = FastAPI()
 
-ENTRIES_FILE = Path("entries.json")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+ENTRIES_FILE = "entries.json"
 
 
 class Entry(BaseModel):
@@ -30,16 +28,12 @@ class Entry(BaseModel):
     recovery: int
 
 
-def load_entries() -> list:
-    """Read entries from entries.json and return as list."""
-    if not ENTRIES_FILE.exists():
-        return []
+def load_entries():
     with open(ENTRIES_FILE, "r") as f:
         return json.load(f)
 
 
-def save_entries(entries: list) -> None:
-    """Write entries list to entries.json."""
+def save_entries(entries):
     with open(ENTRIES_FILE, "w") as f:
         json.dump(entries, f, indent=2)
 
@@ -54,16 +48,16 @@ def submit_entry(entry: Entry):
     entries = load_entries()
     entries.append(entry.model_dump())
     save_entries(entries)
-    return {"status": "entry stored"}
+    return {"message": "Entry submitted."}
 
 
 @app.get("/insights")
 def insights():
     entries = load_entries()
     if not entries:
-        raise HTTPException(status_code=400, detail="No entries found")
+        raise HTTPException(status_code=400, detail="No entries found.")
     try:
         insights = run_zenith(entries)
+        return insights
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    return insights

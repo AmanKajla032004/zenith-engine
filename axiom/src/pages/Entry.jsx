@@ -102,11 +102,11 @@ export default function Entry() {
         </div>
 
         <div style={styles.row}>
-          {field("Mood (1–10)", "mood", "number", { min: 1, max: 10 })}
-          {field("Stress (1–10)", "stress", "number", { min: 1, max: 10 })}
+          {field("Mood (1-10)", "mood", "number", { min: 1, max: 10 })}
+          {field("Stress (1-10)", "stress", "number", { min: 1, max: 10 })}
         </div>
 
-        {field("Recovery (1–10)", "recovery", "number", { min: 1, max: 10 })}
+        {field("Recovery (1-10)", "recovery", "number", { min: 1, max: 10 })}
 
         <button type="submit" style={styles.btn}>Submit</button>
       </form>
@@ -123,7 +123,7 @@ const styles = {
   title: {
     fontSize: "1.5rem",
     fontWeight: 600,
-    color: "#fafafa",
+    color: "var(--text-primary)",
     margin: "0 0 1.5rem",
     textAlign: "center",
   },
@@ -146,15 +146,15 @@ const styles = {
     fontSize: "0.7rem",
     textTransform: "uppercase",
     letterSpacing: "0.1em",
-    color: "#71717a",
+    color: "var(--text-secondary)",
   },
   input: {
-    background: "#18181b",
-    border: "1px solid #27272a",
+    background: "var(--bg-card)",
+    border: "1px solid var(--border-card)",
     borderRadius: "8px",
     padding: "0.6rem 0.75rem",
     fontSize: "0.9rem",
-    color: "#e4e4e7",
+    color: "var(--text-primary)",
     outline: "none",
     fontFamily: "inherit",
     width: "100%",
@@ -162,13 +162,13 @@ const styles = {
     transition: "border-color 0.2s",
   },
   inputError: {
-    borderColor: "#ef4444",
+    borderColor: "var(--danger)",
   },
   btn: {
     marginTop: "0.5rem",
     padding: "0.7rem",
-    background: "#fafafa",
-    color: "#0e0e10",
+    background: "var(--accent-blue)",
+    color: "var(--text-inverse)",
     border: "none",
     borderRadius: "8px",
     fontSize: "0.85rem",
@@ -180,18 +180,18 @@ const styles = {
   success: {
     textAlign: "center",
     fontSize: "0.85rem",
-    color: "#4ade80",
+    color: "var(--success-text)",
     margin: "0 0 1rem",
   },
   error: {
     textAlign: "center",
     fontSize: "0.85rem",
-    color: "#f87171",
+    color: "var(--danger-muted)",
     margin: "0 0 1rem",
   },
   fieldError: {
     fontSize: "0.75rem",
-    color: "#ef4444",
+    color: "var(--danger)",
     margin: "-0.5rem 0 0",
   },
 };
