@@ -10,6 +10,7 @@ from zenith.core.baseline import compute_baseline
 from zenith.core.normalization import normalize_entry
 from zenith.core.state_vector import build_state_vector
 from zenith.reasoning.reasoning_engine import run_reasoning
+from zenith.v3.planner import plan_behavior
 
 
 def run_zenith(entries: list) -> dict:
@@ -21,7 +22,7 @@ def run_zenith(entries: list) -> dict:
 
     Returns:
         Dict containing baseline, state vector, balance score,
-        regime classification, and all reasoning outputs.
+        regime classification, all reasoning outputs, and v3 plan.
         Returns empty dict if entries is empty.
     """
     if not entries:
@@ -50,10 +51,19 @@ def run_zenith(entries: list) -> dict:
     else:
         regime = "declining"
 
+    state_vector = [
+        state["performance"],
+        state["recovery"],
+        state["energy"],
+        state["emotional"],
+    ]
+    plan = plan_behavior(state_vector)
+
     return {
         "baseline": baseline,
         "state": state,
         "balance_score": balance_score,
         "regime": regime,
         **reasoning,
+        "zenith_v3": plan,
     }
