@@ -378,5 +378,145 @@
     "mood": 8,
     "stress": 3,
     "recovery": 8
+  },
+  {
+    "date": "2026-03-31",
+    "tasks_completed": 4,
+    "tasks_total": 5,
+    "deep_work_hours": 3.0,
+    "sleep_hours": 8.0,
+    "mood": 8,
+    "stress": 4,
+    "recovery": 5
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 5,
+    "tasks_total": 6,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 8.0,
+    "mood": 8,
+    "stress": 7,
+    "recovery": 10
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 3,
+    "tasks_total": 4,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 9,
+    "stress": 5,
+    "recovery": 10
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 3,
+    "tasks_total": 5,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 8.0,
+    "mood": 3,
+    "stress": 5,
+    "recovery": 9
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 1,
+    "tasks_total": 5,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 4,
+    "stress": 8,
+    "recovery": 7
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 1,
+    "tasks_total": 5,
+    "deep_work_hours": 6.0,
+    "sleep_hours": 5.0,
+    "mood": 2,
+    "stress": 9,
+    "recovery": -1
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 2,
+    "tasks_total": 3,
+    "deep_work_hours": 3.0,
+    "sleep_hours": 7.0,
+    "mood": 7,
+    "stress": 8,
+    "recovery": 6
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 2,
+    "tasks_total": 4,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 9,
+    "stress": 4,
+    "recovery": 7
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 5,
+    "tasks_total": 5,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 9,
+    "stress": 2,
+    "recovery": 8
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 4,
+    "tasks_total": 5,
+    "deep_work_hours": 8.0,
+    "sleep_hours": 8.0,
+    "mood": 7,
+    "stress": 1,
+    "recovery": 7
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 4,
+    "tasks_total": 3,
+    "deep_work_hours": 3.0,
+    "sleep_hours": 7.0,
+    "mood": 9,
+    "stress": 0,
+    "recovery": 8
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 4,
+    "tasks_total": 5,
+    "deep_work_hours": 2.0,
+    "sleep_hours": 7.5,
+    "mood": 9,
+    "stress": 3,
+    "recovery": 9
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 2,
+    "tasks_total": 3,
+    "deep_work_hours": 1.0,
+    "sleep_hours": 7.0,
+    "mood": 10,
+    "stress": -2,
+    "recovery": 8
+  },
+  {
+    "date": "2026-04-10",
+    "tasks_completed": 5,
+    "tasks_total": 5,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 9,
+    "stress": 3,
+    "recovery": 8
   }
 ]

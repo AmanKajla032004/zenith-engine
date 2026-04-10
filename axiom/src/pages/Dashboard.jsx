@@ -9,6 +9,10 @@ import BehavioralTrendChart from "../components/Trends/BehavioralTrendChart";
 import EntryForm from "../components/EntryForm/EntryForm";
 import MetricCard from "../components/common/MetricCard";
 import ThemeToggle from "../components/common/ThemeToggle";
+import PlannerSummaryCard from "../components/zenith-v3/PlannerSummaryCard";
+import TrajectoryGraph from "../components/zenith-v3/TrajectoryGraph";
+import ActionTimeline from "../components/zenith-v3/ActionTimeline";
+import ProjectionMetrics from "../components/zenith-v3/ProjectionMetrics";
 
 const REGIME_COLOR = {
   stable:          "var(--success)",
@@ -229,6 +233,30 @@ export default function Dashboard() {
         <h2 className="section-title">Behavioral Trends</h2>
         <BehavioralTrendChart data={insightsHistory} />
       </section>
+
+      {/* 5. Zenith v3 — Stabilization Planner */}
+      {insights.zenith_v3 && (
+        <>
+          <section className="card" style={{ borderLeft: "3px solid var(--accent-blue)" }}>
+            <h2 className="section-title">Zenith v3 — Stabilization Plan</h2>
+            <div className="dashboard-grid">
+              <PlannerSummaryCard planner={insights.zenith_v3} />
+              <ActionTimeline planner={insights.zenith_v3} />
+            </div>
+          </section>
+
+          <section className="card">
+            <ProjectionMetrics
+              planner={insights.zenith_v3}
+              insights={insights}
+            />
+          </section>
+
+          <section className="card">
+            <TrajectoryGraph planner={insights.zenith_v3} />
+          </section>
+        </>
+      )}
     </div>
   );
-} 
+}

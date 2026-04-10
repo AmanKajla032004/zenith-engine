@@ -25,9 +25,30 @@ def plan_behavior(state: State) -> Dict[str, Any]:
 
     search_fn = _SEARCH[policy]
     actions = search_fn(state, depth)
+    actions = [action.lstrip("0123456789").strip() for action in actions]
 
-    trajectory = simulate_trajectory(state, actions)
-    projection = compute_projection(trajectory)
+    # fallback if planner returns no actions but system unstable
+    if not actions:
+        imbalance = sum(abs(x) for x in state)
+        if imbalance > 0.5:
+            actions = ["reduce_workload", "sleep_extension", "mindfulness"]
+
+    raw_trajectory = simulate_trajectory(state, actions)
+
+    def balance(s: State) -> float:
+        return 10 - (abs(s[0]) + abs(s[1]) + abs(s[2]) + abs(s[3]))
+
+    # find best balance step and truncate
+    balances = [balance(s) for s in raw_trajectory]
+    best_step = balances.index(max(balances))
+    actions = actions[:best_step]
+    raw_trajectory = raw_trajectory[: best_step + 1]
+
+    trajectory = [
+        {"step": i, "balance": balance(s)}
+        for i, s in enumerate(raw_trajectory)
+    ]
+    projection = compute_projection(raw_trajectory)
 
     return {
         "policy": policy,

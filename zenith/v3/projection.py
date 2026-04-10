@@ -25,7 +25,7 @@ def compute_projection(trajectory: List[State]) -> Projection:
 
     return {
         "final_state": final_state,
-        "final_balance_score": round(final_balance, 4),
+        "projected_balance": round(final_balance, 4),
         "steps_to_stable": steps_to_stable,
         "improvement": round(final_balance - initial_balance, 4),
     }
