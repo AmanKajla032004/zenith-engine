@@ -29,9 +29,6 @@ export default function PlannerSummaryCard({ planner }) {
             Policy: {POLICY_LABEL[policy] || policy}
           </span>
         </div>
-        <p className="text-xs text-neutral-500 mt-2 leading-relaxed">
-          This planner suggests behavioral adjustments to stabilize your system.
-        </p>
       </div>
 
       {/* Metrics row */}

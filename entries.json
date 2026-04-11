@@ -518,5 +518,35 @@
     "mood": 9,
     "stress": 3,
     "recovery": 8
+  },
+  {
+    "date": "2026-04-11",
+    "tasks_completed": 4,
+    "tasks_total": 5,
+    "deep_work_hours": 4.0,
+    "sleep_hours": 7.0,
+    "mood": 8,
+    "stress": 2,
+    "recovery": 8
+  },
+  {
+    "date": "2026-04-11",
+    "tasks_completed": 7,
+    "tasks_total": 8,
+    "deep_work_hours": 5.0,
+    "sleep_hours": 7.0,
+    "mood": 3,
+    "stress": 8,
+    "recovery": 2
+  },
+  {
+    "date": "2026-04-11",
+    "tasks_completed": 4,
+    "tasks_total": 6,
+    "deep_work_hours": 3.0,
+    "sleep_hours": 8.0,
+    "mood": 9,
+    "stress": 3,
+    "recovery": 8
   }
 ]

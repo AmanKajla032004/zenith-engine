@@ -239,10 +239,11 @@ export default function Dashboard() {
         <>
           <section className="card" style={{ borderLeft: "3px solid var(--accent-blue)" }}>
             <h2 className="section-title">Zenith v3 — Stabilization Plan</h2>
-            <div className="dashboard-grid">
-              <PlannerSummaryCard planner={insights.zenith_v3} />
-              <ActionTimeline planner={insights.zenith_v3} />
-            </div>
+            <PlannerSummaryCard planner={insights.zenith_v3} />
+          </section>
+
+          <section className="card">
+            <ActionTimeline planner={insights.zenith_v3} />
           </section>
 
           <section className="card">

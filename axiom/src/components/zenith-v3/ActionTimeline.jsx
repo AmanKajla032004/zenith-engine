@@ -21,35 +21,18 @@ export default function ActionTimeline({ planner }) {
       )}
 
       {actions.length > 0 && (
-        <div className="relative pl-4">
-        {/* Vertical connector line */}
-        {actions.length > 1 && (
-          <div
-            className="absolute left-[1.125rem] top-3 w-px bg-gradient-to-b from-white/[0.1] via-white/[0.06] to-transparent"
-            style={{ height: `calc(100% - 1.5rem)` }}
-          />
-        )}
-
-        <ol className="space-y-1 list-none">
+        <div>
+        <ol className="space-y-1 list-decimal list-inside">
           {actions.map((action, i) => (
             <li
               key={i}
-              className="relative flex items-center gap-4 py-2.5 group"
+              className="relative py-2.5 group text-sm text-neutral-300 tracking-wide group-hover:text-neutral-100 transition-colors"
             >
-              {/* Circular number indicator */}
-              <span className="relative z-10 shrink-0 w-6 h-6 rounded-full bg-neutral-900 border border-white/[0.1] flex items-center justify-center text-[11px] font-mono text-neutral-500 group-hover:border-white/[0.2] group-hover:text-neutral-300 transition-colors">
-                {i + 1}
-              </span>
-
-              {/* Action text */}
-              <span className="text-sm text-neutral-300 tracking-wide group-hover:text-neutral-100 transition-colors">
-                {action
-                  .replace(/[0-9]/g, "")
-                  .replace(/_/g, " ")
-                  .replace(/\b\w/g, l => l.toUpperCase())
-                  .trim()}
-                  
-              </span>
+              {action
+                .replace(/[0-9]/g, "")
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, l => l.toUpperCase())
+                .trim()}
             </li>
           ))}
         </ol>
